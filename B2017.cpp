@@ -54,6 +54,42 @@ int isCircle(LNode L){
     }
 }
 
+
+//第一问得出相遇点后，再发出一个指针，统计这个指针再次回到这个点的距离，也就是环的距离。
+//从起点再发出两个指针，一个指针在另一个前面，两个指针的距离就是环的距离
+// 当两个指针再次相遇的时候就是环的入口。
+LinkList GetCircleStart(LinkList head){
+    LinkList p1 = head, p2 = head;
+    while(p1 && p2){
+        //防止p2每次走两步时对NULL操作
+        if(p2->next == NULL)
+            //有出口，说明不是环
+            return NULL;
+        //p2走两步
+        p2 = (p2->next)->next;
+        if(p1 == p2)
+            break;
+        //p1走一步
+        p1 = p1->next;
+    }
+    //统计环的大小
+    LinkList p3 = p2->next;
+    int count = 1;
+    while(p3 && p3 != p2) {
+        p3 = p3->next;
+        count++;
+    }
+    //p1和p2从起点出发,相隔count步
+    p1 = p2 = head;
+    while(--count)
+        p2 = p2->next;
+    while(p1 != p2) {
+        p1 = p1->next;
+        p2 = p2->next;
+    }
+    return p1;
+}
+
 //有序链表合并
 LNode* merge(LNode *l1, LNode *l2) {
     LNode node, *head = &node, *p = head;
